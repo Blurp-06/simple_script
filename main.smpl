@@ -1,0 +1,15 @@
+< I do support 1 line comments. >
+
+< This is a variable declaration. >
+var variable = 10
+
+< Variable declaration with a function that takes a function that takes a function? Heck yeah! >
+var age = add(-10, add(add(1, 1), 3), 20)
+
+< If statements. >
+if eq(age, 15) {
+    print(true)
+}
+
+< Yes I can print too. >
+print(age)

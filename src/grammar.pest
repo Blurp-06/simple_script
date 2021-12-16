@@ -1,0 +1,29 @@
+// Helpers.
+space = _{" " | "\t"}
+
+// Data types.
+type_int = {"-"? ~ ASCII_DIGIT+}
+type_bool = {"true" | "false"}
+all_types = _{type_int | type_bool}
+
+// Variable decl.
+var_types = {all_types | func_call_decl | var_name}
+var_name = {(ASCII_ALPHA | "_")+}
+var_decl = {space* ~ "var" ~ space+ ~ var_name ~ space* ~ "=" ~ space* ~ var_types}
+
+// Comment decl.
+comment_decl = _{space* ~ "<" ~ ('\x20'..'\x3B' | "=" | '\x3F'..'\x7E')* ~ ">" ~space*}
+
+// Calling of functions.
+func_call_arg_types = _{func_call_decl | all_types | var_name}
+func_call_name = {(ASCII_ALPHA | "_")+}
+func_call_args = {space* ~ (func_call_arg_types)? ~ space* ~ ("," ~ space* ~ func_call_arg_types)*}
+func_call_decl = {space* ~ func_call_name ~ space* ~ "(" ~ func_call_args ~ space* ~ ")"}
+
+// Control statements.
+if_types = _{func_call_decl | var_name}
+control_if = {"if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (NEWLINE? ~ line ~ NEWLINE+)* ~ space* ~ "}" ~ space*}
+
+// Final form.
+line = {(comment_decl | var_decl | func_call_decl)}
+ast = _{SOI ~ ((line | control_if) ~ NEWLINE+)* ~ EOI}
