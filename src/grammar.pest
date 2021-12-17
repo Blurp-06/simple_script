@@ -22,8 +22,8 @@ func_call_decl = {space* ~ func_call_name ~ space* ~ "(" ~ func_call_args ~ spac
 
 // Control statements.
 if_types = _{func_call_decl | var_name}
-control_if = {"if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (NEWLINE? ~ line ~ NEWLINE+)* ~ space* ~ "}" ~ space*}
+control_if = {space* ~ "if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (line ~ NEWLINE+)* ~ space* ~ "}" ~ space*}
 
 // Final form.
-line = {(comment_decl | var_decl | func_call_decl)}
-ast = _{SOI ~ ((line | control_if) ~ NEWLINE+)* ~ EOI}
+line = {(NEWLINE | comment_decl | var_decl | func_call_decl | control_if)}
+ast = _{SOI ~ (line ~ NEWLINE+)* ~ EOI}

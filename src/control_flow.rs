@@ -11,7 +11,6 @@ pub fn match_rule_if(if_statement: Pair<Rule>, executor: &mut CodeExecutor) {
     // Gets the condition and makes an iterable.
     let mut if_iter = if_statement.into_inner().into_iter();
     let condition = if_iter.next().unwrap();
-    let pairs = if_iter.next().unwrap().into_inner();
 
     // Temp value.
     let mut condition_value: VariableContent = VariableContent {
@@ -47,7 +46,9 @@ pub fn match_rule_if(if_statement: Pair<Rule>, executor: &mut CodeExecutor) {
     match condition_value.data_type {
         VariableTypes::BOOL => {
             if condition_value.value == "true" {
-                executor.execute_code(pairs);
+                for pair in if_iter {
+                    executor.execute_code(pair.into_inner());
+                }
                 return;
             }
         }

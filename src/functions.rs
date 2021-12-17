@@ -1,5 +1,6 @@
 use core::panic;
 use std::collections::HashMap;
+use std::io::{self, Write};
 
 use pest::iterators::Pair;
 
@@ -149,6 +150,7 @@ fn simple_print(args: Vec<VariableContent>) -> VariableContent {
         }
     }
     println!("{}", final_message);
+    io::stdout().flush().unwrap();
     VariableContent {
         data_type: VariableTypes::NULL,
         value: "".to_string(),

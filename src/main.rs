@@ -2,7 +2,6 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
-use control_flow::match_rule_if;
 use execute_code::CodeExecutor;
 use pest::Parser;
 use std::fs;
@@ -26,6 +25,33 @@ fn main() {
     // Parse the file.
     let parsed = SimpleParser::parse(Rule::ast, &file_content).expect("Unable to parse file.");
 
+    // Remove comments.
+    let mut to_remove_slices: Vec<String> = Vec::new();
+    for pair in parsed {
+        match pair.as_rule() {
+            Rule::line => {
+                let inners = pair.into_inner();
+                for inner in inners {
+                    match inner.as_rule() {
+                        Rule::comment_decl => {
+                            to_remove_slices.push(inner.as_str().to_string());
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    // Actually removing them.
+    for i in to_remove_slices {
+        file_content = file_content.replace(i.as_str(), "");
+    }
+
+    // Parse the file again.
+    let parsed = SimpleParser::parse(Rule::ast, &file_content).expect("Unable to parse file.");
+
     // Init containers.
     // let mut variable_container = VariableContainer::new();
     // let mut function_container = FunctionContainer::new();
@@ -36,13 +62,10 @@ fn main() {
         match pair.as_rule() {
             Rule::EOI => {}
             Rule::line => code_executor.execute_code(pair.into_inner()),
-            Rule::control_if => {
-                match_rule_if(pair, &mut code_executor);
-            }
             _ => panic!("Unimplemented rule '{:?}'.", pair.as_rule()),
         }
     }
 
     // Prints out the variables at the end of a program.
-    // variable_container.debug_print_vars();
+    // code_executor.var_container.debug_print_vars();
 }

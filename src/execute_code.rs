@@ -2,6 +2,7 @@ use core::panic;
 
 use pest::iterators::Pairs;
 
+use crate::control_flow::match_rule_if;
 use crate::functions::{match_rule_func_call_decl, FunctionContainer};
 use crate::variables::{match_rule_vardecl, VariableContainer};
 use crate::Rule;
@@ -19,6 +20,7 @@ impl CodeExecutor {
             var_container: VariableContainer::new(),
         }
     }
+
     pub fn execute_code(&mut self, lines: Pairs<Rule>) {
         // Loop through all the pairs.
         for line in lines {
@@ -34,8 +36,9 @@ impl CodeExecutor {
                         &mut self.var_container,
                     );
                 }
+                Rule::control_if => match_rule_if(line, self),
                 _ => {
-                    panic!("Rule '{:?}' not implemented", line.as_rule());
+                    panic!("Rule '{:?}' not implemented.", line.as_rule());
                 }
             }
         }
