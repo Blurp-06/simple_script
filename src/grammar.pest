@@ -21,7 +21,7 @@ func_call_args = {space* ~ (func_call_arg_types)? ~ space* ~ ("," ~ space* ~ fun
 func_call_decl = {func_call_name ~ space* ~ "(" ~ func_call_args ~ space* ~ ")"}
 
 // Control statements.
-if_types = _{func_call_decl | var_name}
+if_types = _{type_bool | func_call_decl | var_name}
 control_if = {"if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (line ~ NEWLINE+)* ~ space* ~ "}"}
 
 // Final form.

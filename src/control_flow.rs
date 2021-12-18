@@ -20,6 +20,10 @@ pub fn match_rule_if(if_statement: Pair<Rule>, executor: &mut CodeExecutor) {
 
     // Check for types of conditions.
     match condition.as_rule() {
+        Rule::type_bool => {
+            condition_value.value = condition.as_str().clone().to_string();
+            condition_value.data_type = VariableTypes::BOOL;
+        }
         Rule::var_name => {
             let r = executor.var_container.get_variable(condition.as_str());
             condition_value.data_type = r.data_type;
