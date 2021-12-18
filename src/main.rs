@@ -1,15 +1,17 @@
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
+pub mod buildin_functions;
+pub mod control_flow;
+pub mod execute_code;
+pub mod functions;
+pub mod variables;
 
-use execute_code::CodeExecutor;
-use pest::Parser;
 use std::fs;
 
-mod control_flow;
-mod execute_code;
-mod functions;
-mod variables;
+use pest::Parser;
+
+use crate::execute_code::CodeExecutor;
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"] // Relative to src.
@@ -25,9 +27,7 @@ fn main() {
     // Parse the file.
     let parsed = SimpleParser::parse(Rule::ast, &file_content).expect("Unable to parse file.");
 
-    // Init containers.
-    // let mut variable_container = VariableContainer::new();
-    // let mut function_container = FunctionContainer::new();
+    // Init container.
     let mut code_executor = CodeExecutor::new();
 
     // Loop through the declerations.

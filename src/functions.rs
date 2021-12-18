@@ -4,6 +4,7 @@ use std::io::{self, Write};
 
 use pest::iterators::Pair;
 
+use crate::buildin_functions::math_functions::{simple_add, simple_sub};
 use crate::variables::{VariableContainer, VariableContent, VariableTypes};
 use crate::Rule;
 
@@ -19,6 +20,7 @@ impl FunctionContainer {
         loaded_func.insert("print".to_string(), simple_print);
         loaded_func.insert("eq".to_string(), simple_eq);
         loaded_func.insert("add".to_string(), simple_add);
+        loaded_func.insert("sub".to_string(), simple_sub);
         FunctionContainer {
             functions: loaded_func,
         }
@@ -62,6 +64,10 @@ pub fn match_rule_func_call_decl(
                                 data_type: VariableTypes::BOOL,
                             });
                         }
+                        Rule::type_float => args.push(VariableContent {
+                            value: px.as_str().to_string(),
+                            data_type: VariableTypes::FLOAT,
+                        }),
                         Rule::var_name => {
                             // Gets the variable then copies it because it is a shared reference.
                             let var = variable_container.get_variable(px.as_str());
@@ -93,46 +99,6 @@ pub fn match_rule_func_call_decl(
 
     // Calls the function.
     function_container.call_function(func.as_str(), args)
-}
-
-// Math functions.
-fn simple_add(args: Vec<VariableContent>) -> VariableContent {
-    if args.len() < 2 {
-        panic!(
-            "Length of args was {}; there should atleast be 2 arguments.",
-            args.len()
-        );
-    }
-
-    // Check if all types are supported.
-    {
-        let mut tmp_args: Vec<VariableContent> = vec![
-            VariableContent {
-                value: "".to_string(),
-                data_type: VariableTypes::NULL
-            };
-            args.len()
-        ];
-        tmp_args.clone_from_slice(&args[..]);
-        for arg in tmp_args {
-            if arg.data_type != VariableTypes::INT {
-                panic!("Argument can't be of type '{:?}'.", arg.data_type);
-            }
-        }
-    }
-
-    let mut arg_iter = args.into_iter();
-    let first = arg_iter.next().unwrap();
-    let mut sum = first.value.parse::<i128>().unwrap();
-
-    for arg in arg_iter {
-        sum += arg.value.parse::<i128>().unwrap();
-    }
-
-    VariableContent {
-        value: sum.to_string(),
-        data_type: VariableTypes::INT,
-    }
 }
 
 // Functions for in the simple script source code.

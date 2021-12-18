@@ -1,7 +1,6 @@
-var age = 10
+var age
 
-if true {
-    age = 20
-}
+age = add(2, sub(-5.0, 2))
 
+debug.var
 print(age)

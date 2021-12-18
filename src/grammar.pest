@@ -3,8 +3,9 @@ space = _{" " | "\t"}
 
 // Data types.
 type_int = {"-"? ~ ASCII_DIGIT+}
+type_float = {"-"? ~ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+}
 type_bool = {"true" | "false"}
-all_types = _{type_int | type_bool}
+all_types = _{type_float | type_int | type_bool}
 
 // Variable decl.
 var_types = {all_types | func_call_decl | var_name}

@@ -10,6 +10,7 @@ use pest::iterators::Pair;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum VariableTypes {
     INT,
+    FLOAT,
     BOOL,
     NULL,
 }
