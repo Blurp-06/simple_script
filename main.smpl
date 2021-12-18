@@ -3,6 +3,7 @@ var age = 10
 if eq(age, 10){
     var age = 5
     var age = 10
+
     if eq(age, 10){
         var age = 20
     }

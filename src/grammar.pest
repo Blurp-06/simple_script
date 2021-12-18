@@ -25,5 +25,5 @@ if_types = _{func_call_decl | var_name}
 control_if = {space* ~ "if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (line ~ NEWLINE+)* ~ space* ~ "}" ~ space*}
 
 // Final form.
-line = {(NEWLINE | comment_decl | var_decl | func_call_decl | control_if)}
+line = {(comment_decl | var_decl | func_call_decl | control_if | space+)}
 ast = _{SOI ~ (line ~ NEWLINE+)* ~ EOI}

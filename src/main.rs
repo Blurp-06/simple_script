@@ -25,33 +25,6 @@ fn main() {
     // Parse the file.
     let parsed = SimpleParser::parse(Rule::ast, &file_content).expect("Unable to parse file.");
 
-    // Remove comments.
-    let mut to_remove_slices: Vec<String> = Vec::new();
-    for pair in parsed {
-        match pair.as_rule() {
-            Rule::line => {
-                let inners = pair.into_inner();
-                for inner in inners {
-                    match inner.as_rule() {
-                        Rule::comment_decl => {
-                            to_remove_slices.push(inner.as_str().to_string());
-                        }
-                        _ => {}
-                    }
-                }
-            }
-            _ => {}
-        }
-    }
-
-    // Actually removing them.
-    for i in to_remove_slices {
-        file_content = file_content.replace(i.as_str(), "");
-    }
-
-    // Parse the file again.
-    let parsed = SimpleParser::parse(Rule::ast, &file_content).expect("Unable to parse file.");
-
     // Init containers.
     // let mut variable_container = VariableContainer::new();
     // let mut function_container = FunctionContainer::new();
