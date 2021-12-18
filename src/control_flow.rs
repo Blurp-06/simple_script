@@ -46,13 +46,15 @@ pub fn match_rule_if(if_statement: Pair<Rule>, executor: &mut CodeExecutor) {
         }
     }
 
-    // Sets the condition values.
+    // Execute the code.
     match condition_value.data_type {
         VariableTypes::BOOL => {
             if condition_value.value == "true" {
+                executor.var_container.scope_in();
                 for pair in if_iter {
                     executor.execute_code(pair.into_inner());
                 }
+                executor.var_container.scope_out();
                 return;
             }
         }

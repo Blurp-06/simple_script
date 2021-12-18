@@ -16,7 +16,7 @@ pub enum VariableTypes {
 
 // Contains the actual variables and has some methods.
 pub struct VariableContainer {
-    variables: HashMap<String, VariableContent>,
+    variables: Vec<HashMap<String, VariableContent>>,
 }
 
 // Stores information about the variable that is stored, like the value and type.
@@ -29,29 +29,48 @@ pub struct VariableContent {
 impl VariableContainer {
     // Creates a new and empty hashmap for the variables to live in.
     pub fn new() -> VariableContainer {
-        VariableContainer {
-            variables: HashMap::new(),
-        }
+        let mut ret = VariableContainer {
+            variables: Vec::new(),
+        };
+        ret.variables.push(HashMap::new());
+        ret
+    }
+
+    // Moves into the next scope.
+    pub fn scope_in(&mut self) {
+        self.variables.push(HashMap::new());
+    }
+
+    // Moves out of the scope.
+    pub fn scope_out(&mut self) {
+        self.variables.pop();
     }
 
     // Adds a variable to the hash.
     pub fn add_variable(&mut self, name: &str, value: VariableContent) {
-        self.variables.insert(name.to_string(), value);
+        self.variables
+            .last_mut()
+            .unwrap()
+            .insert(name.to_string(), value);
     }
 
     // Gets the VariableContent of a variable.
     pub fn get_variable(&self, name: &str) -> &VariableContent {
-        let var = self
-            .variables
-            .get(name)
-            .expect(format!("Couldn't get variable '{}'.", name).as_str());
-        var
+        let var_iter = self.variables.iter().rev();
+
+        for scope in var_iter {
+            if scope.contains_key(name) {
+                return scope.get(name).unwrap();
+            }
+        }
+
+        panic!("Couldn't get variable {}.", name);
     }
 
     // Prints out the content of the hashmap for debug purposes.
     #[allow(dead_code)]
     pub fn debug_print_vars(&self) {
-        for (k, v) in self.variables.iter() {
+        for (k, v) in self.variables.last().unwrap().iter() {
             println!("{}: {:?}", k, v);
         }
     }
