@@ -1,8 +1,7 @@
 var age = 10
 
 if true {
-    var age = 15
-    print(age)
+    age = 20
 }
 
 print(age)

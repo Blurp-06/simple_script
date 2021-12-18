@@ -139,15 +139,7 @@ fn simple_add(args: Vec<VariableContent>) -> VariableContent {
 fn simple_print(args: Vec<VariableContent>) -> VariableContent {
     let mut final_message = String::new();
     for arg in args {
-        match arg.data_type {
-            VariableTypes::INT => {
-                final_message.push_str(arg.value.as_str());
-            }
-            VariableTypes::BOOL => {
-                final_message.push_str(arg.value.as_str());
-            }
-            _ => panic!("Type unsupported for print function."),
-        }
+        final_message.push_str(arg.value.as_str());
     }
     println!("{}", final_message);
     io::stdout().flush().unwrap();

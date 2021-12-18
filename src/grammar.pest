@@ -9,7 +9,9 @@ all_types = _{type_int | type_bool}
 // Variable decl.
 var_types = {all_types | func_call_decl | var_name}
 var_name = {(ASCII_ALPHA | "_")+}
-var_decl = {"var" ~ space+ ~ var_name ~ space* ~ "=" ~ space* ~ var_types}
+var_decl_assign = {"var" ~ space+ ~ var_name ~ space* ~ "=" ~ space* ~ var_types}
+var_empty_decl = {"var" ~ space+ ~ var_name}
+var_reassign_decl = {var_name ~ space* ~ "=" ~ space* ~ var_types}
 
 // Comment decl.
 comment_decl = _{"<" ~ ('\x20'..'\x3B' | "=" | '\x3F'..'\x7E')* ~ ">"}
@@ -24,6 +26,10 @@ func_call_decl = {func_call_name ~ space* ~ "(" ~ func_call_args ~ space* ~ ")"}
 if_types = _{type_bool | func_call_decl | var_name}
 control_if = {"if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (line ~ NEWLINE+)* ~ space* ~ "}"}
 
+// Debug.
+debug_var = {"debug.var"}
+debug = {debug_var}
+
 // Final form.
-line = {space* ~ (comment_decl | var_decl | func_call_decl | control_if | space+) ~ space*}
+line = {space* ~ (debug | comment_decl | var_decl_assign | var_empty_decl | var_reassign_decl | func_call_decl | control_if | space+) ~ space*}
 ast = _{SOI ~ (line ~ NEWLINE+)* ~ EOI}
