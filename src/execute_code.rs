@@ -3,7 +3,7 @@ use core::panic;
 use pest::iterators::Pairs;
 
 use crate::control_flow::match_rule_if;
-use crate::functions::{match_rule_func_call_decl, FunctionContainer};
+use crate::functions::{match_rule_func_call_decl, match_rule_make_function, FunctionContainer};
 use crate::variables::{
     match_rule_empty_var, match_rule_reassign_variable, match_rule_vardecl, VariableContainer,
 };
@@ -46,6 +46,9 @@ impl CodeExecutor {
                         &self.function_container,
                         &mut self.var_container,
                     );
+                }
+                Rule::func_make_decl => {
+                    match_rule_make_function(line, &mut self.function_container)
                 }
                 Rule::control_if => match_rule_if(line, self),
                 Rule::debug => {

@@ -6,6 +6,8 @@ pub fn make_string(src_string: &str) -> String {
     if src_string.starts_with("\"") && src_string.ends_with("\"") {
         output_string = src_string[1..src_string.len() - 1].to_string();
     }
+
+    // Replaces special cases.
     output_string = output_string.replace("\\n", "\n");
     output_string = output_string.replace("\\t", "\t");
     output_string = output_string.replace("\\r", "\r");

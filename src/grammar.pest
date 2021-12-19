@@ -28,10 +28,13 @@ func_call_decl = {func_call_name ~ space* ~ "(" ~ func_call_args ~ space* ~ ")"}
 if_types = _{type_bool | func_call_decl | var_name}
 control_if = {"if" ~ space+ ~ if_types ~ space* ~ "{" ~ space* ~ NEWLINE+ ~ (line ~ NEWLINE+)* ~ space* ~ "}"}
 
+// Own function.
+func_make_decl = {"function" ~ space+ ~ func_call_name ~ space* ~ "(" ~ ")" ~ space* ~ "{" ~ NEWLINE+ ~ (line ~ NEWLINE+)* ~ space* ~ "}"}
+
 // Debug.
 debug_var = {"debug.var"}
 debug = {debug_var}
 
 // Final form.
-line = {space* ~ (debug | comment_decl | var_decl_assign | var_empty_decl | var_reassign_decl | func_call_decl | control_if | space+) ~ space*}
+line = {space* ~ (debug | comment_decl | var_decl_assign | var_empty_decl | var_reassign_decl | func_call_decl | control_if | func_make_decl | space+) ~ space*}
 ast = _{SOI ~ (line ~ NEWLINE+)* ~ EOI}

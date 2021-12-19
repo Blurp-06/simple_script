@@ -2,7 +2,7 @@ use core::panic;
 use std::collections::HashMap;
 use std::io::{self, Write};
 
-use pest::iterators::Pair;
+use pest::iterators::{Pair, Pairs};
 
 use crate::buildin_functions::math_functions::{simple_add, simple_sub};
 use crate::type_string::make_string;
@@ -13,9 +13,10 @@ type SimpleFunction = fn(Vec<VariableContent>) -> VariableContent;
 
 pub struct FunctionContainer {
     functions: HashMap<String, SimpleFunction>,
+    own_functions: HashMap<String, Pairs<Rule>>,
 }
 
-impl FunctionContainer {
+impl<'a> FunctionContainer {
     pub fn new() -> FunctionContainer {
         let mut loaded_func: HashMap<String, SimpleFunction> = HashMap::new();
         loaded_func.insert("print".to_string(), simple_print);
@@ -24,7 +25,13 @@ impl FunctionContainer {
         loaded_func.insert("sub".to_string(), simple_sub);
         FunctionContainer {
             functions: loaded_func,
+            own_functions: HashMap::new(),
         }
+    }
+
+    pub fn is_own_function(&self, func_name: &str) -> bool {
+        // self.own_functions.contains_key(func_name)
+        true
     }
 
     pub fn call_function(&self, func_name: &str, args: Vec<VariableContent>) -> VariableContent {
@@ -32,7 +39,11 @@ impl FunctionContainer {
             .functions
             .get(func_name)
             .expect(format!("Unknown function '{}'.", func_name).as_str());
-        function(args)
+        return function(args);
+    }
+
+    pub fn add_own_function(&mut self, func_name: &str, code: Pairs<'_, Rule>) {
+        self.own_function.insert(func_name.to_string(), code);
     }
 }
 
@@ -104,6 +115,13 @@ pub fn match_rule_func_call_decl(
 
     // Calls the function.
     function_container.call_function(func.as_str(), args)
+}
+
+// Making of own functions.
+pub fn match_rule_make_function(pair: Pair<Rule>, function_container: &mut FunctionContainer) {
+    let mut pair_itter = pair.into_inner().into_iter();
+    let function_name = pair_itter.next().unwrap().as_str();
+    function_container.add_own_function(function_name, pair_itter);
 }
 
 // Functions for in the simple script source code.
