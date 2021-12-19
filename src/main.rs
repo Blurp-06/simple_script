@@ -5,6 +5,7 @@ pub mod buildin_functions;
 pub mod control_flow;
 pub mod execute_code;
 pub mod functions;
+pub mod type_string;
 pub mod variables;
 
 use std::fs;

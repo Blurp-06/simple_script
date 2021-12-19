@@ -5,6 +5,7 @@ use std::io::{self, Write};
 use pest::iterators::Pair;
 
 use crate::buildin_functions::math_functions::{simple_add, simple_sub};
+use crate::type_string::make_string;
 use crate::variables::{VariableContainer, VariableContent, VariableTypes};
 use crate::Rule;
 
@@ -64,6 +65,10 @@ pub fn match_rule_func_call_decl(
                                 data_type: VariableTypes::BOOL,
                             });
                         }
+                        Rule::type_string => args.push(VariableContent {
+                            value: make_string(px.as_str()),
+                            data_type: VariableTypes::STRING,
+                        }),
                         Rule::type_float => args.push(VariableContent {
                             value: px.as_str().to_string(),
                             data_type: VariableTypes::FLOAT,

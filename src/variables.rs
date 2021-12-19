@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     functions::{match_rule_func_call_decl, FunctionContainer},
+    type_string::make_string,
     Rule,
 };
 use pest::iterators::Pair;
@@ -10,6 +11,7 @@ use pest::iterators::Pair;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum VariableTypes {
     INT,
+    STRING,
     FLOAT,
     BOOL,
     NULL,
@@ -135,6 +137,10 @@ pub fn match_rule_vardecl(
                         var_content.data_type = VariableTypes::FLOAT;
                         var_content.value = type_info.as_str().to_string();
                     }
+                    Rule::type_string => {
+                        var_content.data_type = VariableTypes::STRING;
+                        var_content.value = make_string(type_info.as_str());
+                    }
                     Rule::var_name => {
                         let result = var_container.get_variable(type_info.as_str());
                         var_content.data_type = result.data_type;
@@ -203,6 +209,10 @@ pub fn match_rule_reassign_variable(
                     Rule::type_bool => {
                         var_content.data_type = VariableTypes::BOOL;
                         var_content.value = type_info.as_str().to_string();
+                    }
+                    Rule::type_string => {
+                        var_content.data_type = VariableTypes::STRING;
+                        var_content.value = make_string(type_info.as_str());
                     }
                     Rule::var_name => {
                         let result = var_container.get_variable(type_info.as_str());
