@@ -1,6 +1,3 @@
-var age
+var age = 6.7
 
-age = add(2, sub(-5.0, 2))
-
-debug.var
 print(age)

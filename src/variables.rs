@@ -131,6 +131,10 @@ pub fn match_rule_vardecl(
                         var_content.data_type = VariableTypes::BOOL;
                         var_content.value = type_info.as_str().to_string();
                     }
+                    Rule::type_float => {
+                        var_content.data_type = VariableTypes::FLOAT;
+                        var_content.value = type_info.as_str().to_string();
+                    }
                     Rule::var_name => {
                         let result = var_container.get_variable(type_info.as_str());
                         var_content.data_type = result.data_type;
@@ -190,6 +194,10 @@ pub fn match_rule_reassign_variable(
                 match type_info.as_rule() {
                     Rule::type_int => {
                         var_content.data_type = VariableTypes::INT;
+                        var_content.value = type_info.as_str().to_string();
+                    }
+                    Rule::type_float => {
+                        var_content.data_type = VariableTypes::FLOAT;
                         var_content.value = type_info.as_str().to_string();
                     }
                     Rule::type_bool => {
